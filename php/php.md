@@ -135,3 +135,94 @@ php 多值提交[]问题 name必须以[]结尾
 不要相信用户提交
 
 php提供多级别错误处理,可在代码或ini文件中配置
+- notice
+- warning
+- error
+
+```
+<?php
+    error_reporting(E_ALL); //show notice and warn
+    ini_set("display_errors",TRUE); //log and send to browser
+?>
+```
+#### 条件
+```php
+<?php if(isset($_POST['summer'])): ?>
+    <b>hello,summer!</b>
+<?php endif ?>
+```
+#### 赋值
+```php
+<=php endif ?>
+```
+
+@符号错误抑制
+```php
+<?php if(@$_POST['summer']): ?>
+    <b>hello,summer!</b>
+<?php endif ?>
+```
+
+#### 用户可见文件
+public权限
+ - lib
+ - etc
+ - html(public)
+
+### 文本数据库
+xml
+ - DTD校验
+ - XML Schema校验
+ - 搜索功能
+ - XPath 无排序功能
+ - XQuery
+ - XSLT
+
+csv tsv psv
+ - 平面文件
+ - 没有层级和嵌套关系
+
+## 登陆校验
+
+### X-Powered-By
+隐藏语言版本
+X代表扩展属性(http spec?)
+
+### 跳转
+ - 302 Location
+ - 或者跳转一个页面,给出链接,以防不支持Location
+ - meta refresh <meta>
+ - js 跳转
+
+### session
+persistence
+session是对页面的访问
+
+使用hashTable或关联数组实现
+PHPSESSID 通过分配cookie实现 大随机数
+```
+<?php
+
+    $_GET
+    $_POST
+    $_REQUEST
+    $_SESSION
+?>
+```
+
+#### cookie嗅探
+https->http问题
+session劫持
+
+ - https加密cookie
+ - ssl性能问题导致成本问题
+    - gmail全站ssl
+    - 支付网站
+    - 银行
+    - 唯一ip (request.head.host也被加密)
+ - tls
+
+#### ip检测
+3g,4g移动网络动态ip问题
+代理服务器ip变动
+
