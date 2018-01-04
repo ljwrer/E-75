@@ -202,11 +202,12 @@ session是对页面的访问
 PHPSESSID 通过分配cookie实现 大随机数
 ```
 <?php
-
+    session_start();
     $_GET
     $_POST
     $_REQUEST
     $_SESSION
+    $_SERVER
 ?>
 ```
 
@@ -220,9 +221,74 @@ session劫持
     - 支付网站
     - 银行
     - 唯一ip (request.head.host也被加密)
+    - 秘钥只与ip对应,不与host对应
+    - wildcard ssl证书
+        - 通配ssl证书
+        - 对子域名有效
+            - foo.baidu.com
+            - bar.baidu.com
+    - 通信延时
+    - 用户默认不会连接CA机构
+    - 证书等级
+        - dv
+        - ov
+        - ev
+ - 应用层防御
+    - 钓鱼网站黑名单
+
  - tls
+ - js加密
+  - 没有证书时的低效不安全解决方案
+   - 文本only
 
 #### ip检测
 3g,4g移动网络动态ip问题
 代理服务器ip变动
 
+### php常量
+```
+<?php
+    define("a","b")
+?>
+```
+永远提前验证用户输入
+
+### session_start
+session_start 检查 http header
+检查cookie header -> phpsessid(长随机数)
+phpsessid->用户信息写入$_session
+>session files默认在/temp临时目录中的文件，因此涉及到文件读取,影响性能
+一般使用redis等内存数据库缓存
+
+### count函数
+return number of key
+
+### htmlspecialchars
+转移html字符
+
+### 跳转
+```php
+define('USER','ray');
+define('PWD','123');
+session_start();
+if(isset($_SESSION['auth']) && $_SESSION['auth'] == TRUE){
+    $host = $_SERVER['HTTP_HOST'];
+    $path = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
+    header("Location: http://$host$path/home.php");
+}
+$wrongLogin = FALSE;
+$userCache = '';
+if(isset($_POST['user']) && isset($_POST['pwd'])){
+    $userCache = htmlspecialchars($_POST['user']);
+    if($_POST['user'] == USER && $_POST['pwd'] == PWD){
+        $_SESSION['auth'] = TRUE;
+        $_SESSION['user'] = $userCache;
+        $host = $_SERVER['HTTP_HOST'];
+        $path = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
+        header("Location: http://$host$path/home.php"); // 跳转
+        exit;
+    }else{
+        $wrongLogin = TRUE;
+    }
+}
+```
