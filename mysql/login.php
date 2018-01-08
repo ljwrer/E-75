@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('../lib/helper.php');
+require('../etc/include.php');
 setHeader("Mysql-login");
 ?>
 <h1>mysql-login</h1>
@@ -10,15 +11,15 @@ if(isset($_SESSION['auth']) && $_SESSION['auth'] == TRUE){
     $login = TRUE;
 }
 if(isset($_POST['user']) && isset($_POST['pwd'])){
-    $connection = mysql_connect('localhost','root');
+    $connection = mysql_connect(HOST,USER);
     if($connection === FALSE){
         die("Could not connect to database" . mysql_error());
     }
-    if(mysql_select_db("ray",$connection) === FALSE){
+    if(mysql_select_db(DB,$connection) === FALSE){
         die("Could not select database" . mysql_error());
     }
-    $sql = sprintf("SELECT 1 FROM users WHERE user = '%s' AND pass = '%s'",mysql_real_escape_string($_POST['user']),mysql_real_escape_string($_POST['pwd']));
-    echo $sql;
+    $pass = mysql_real_escape_string($_POST['pwd']);
+    $sql = sprintf("SELECT 1 FROM users WHERE user = '%s' AND pass = AES_ENCRYPT('%s','%s')",mysql_real_escape_string($_POST['user']),$pass,$pass);
     $result = mysql_query($sql);
     echo $result;
     if($result === FALSE){

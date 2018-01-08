@@ -191,3 +191,106 @@ sql query返回结果集
 
 >区分数据库与数据库服务器
 >区分空值
+
+### httpd.conf
+```
+<VirtualHost *:80>
+    Alias /0 "/home/username/projects/0/html"
+    UseCanonicalName OFF
+<VirtualHost/>
+```
+
+#### 权限
+目录:701 711
+php:600
+css,html,js,img:644
+
+### 密码加密
+mysql函数
+
+ - NOW()
+    - 当前时间
+ - PASSWORD
+    - 加密(weak hash)
+ - AES_ENCRYPT
+    - 二进制加密
+    - varbinary(255)
+    - data
+    - secret
+    - 可限制密文长度
+    - 迁移数据库文件容易出错
+    - 一般将密码同时作为加密文本和密钥 AES(PWD,PWD)
+
+SELECT 1 加速数据传输
+缓存查询  结果在内存中
+
+### sql服务器迁移
+迁移.sql文件  注意二进制文件
+
+挑选合适的数据类型,范围,性能,浮点和舍入问题
+DATE注意时区
+
+### join
+分表查询,联合主键
+>ID使用无符号数,倾向于使用基本类型，方便数据库移植
+```sql
+//inner join
+SELECT drivers.name, times.* FROM times,drivers WHERE times.driver_id=drivers.id // 隐式
+SELECT drivers.name, times.* FROM times JOIN drivers WHERE times.driver_id=drivers.id
+//cross join(debug常用，展现所有的数据)
+SELECT * FROM times CROSS JOIN users
+//outer join
+//left outer join(包含inner join内容，同时给出左表中无匹配的所有行,需要同时展示匹配结果和不匹配结果时使用)
+SELECT drivers.name, times.* FROM drivers LEFT OUTER JOIN times on times.driver_id=drivers.id
+SELECT COUNT(*) FROM drivers //length of drivers
+SELECT * FROM dirvers ORDER BY drivers.name LIMIT 0,1
+```
+>谨慎的删除表中的数据，选择一个字段做标记是更好的选择
+>动态属性应该存入被依赖值而不是动态值，如需要年龄的话应该存入生日
+动态属性计算量不大且读取不频繁选择不存入
+
+### 竞态条件
+金融交易
+```sql
+INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=c+1
+UPDATE table SET c=c+1 WHERE a=1;
+```
+### 事务
+InnoDB
+ - 保证操作的原子性
+ - 避免竞态条件
+ - 无时间差
+ - commit才执行
+ - 可rollback
+ - 速度更慢
+```sql
+START TRANSACTION;
+UPDATE account
+    SET balance = balance - 1000 WHERE number = 2;
+UPDATE account
+    SET balabce = balance + 1000 WHERE number = 1;
+COMMIT;
+```
+```sql
+START TRANSACTION;
+UPDATE account
+    SET balance = balance - 1000 WHERE number = 2;
+UPDATE account
+    SET balabce = balance + 1000 WHERE number = 1;
+SELECT balance
+    FROM account WHERE number = 2;
+# suppose account #2 has a negative balance!
+ROLLBACK;
+```
+
+### 表格锁
+MyISAM:锁定整张表，读锁定或写锁定
+```sql
+LOCK TABLES account WRITE;
+SELECT balance FROM account WHERE number = 2;
+UPDATE account
+    SET balance = 1500 WHERE number = 2;
+UNLOCK TABLES;
+```
+
+交易前检查用户余额
