@@ -27,3 +27,18 @@ csrf:
 
 别处的数据都是不可信的,尤其是非https请求
 使用中间服务器过滤数据
+
+#### php#sleep
+wait seconds
+
+### php#json_encode
+对象序列化为json,
+
+```php
+<?php
+header("Content-type:application/json");
+print json_encode($data);
+?>
+```
+
+>Mashup应用

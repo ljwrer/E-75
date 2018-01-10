@@ -5,10 +5,25 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/search" method="post">
-    <input name="q" />
-    <input type="checkbox" name="summer" />
-    <input type="submit" name="btn">
+<img src="http://auth2.analysys.cn/cas-auth-server/logout?service=http%3A%2F%2Fqianfan.analysys.cn%2Frefine%2Fqianfan%2Fuser%2Flogout" style="display: none">
+<form action="http://auth2.analysys.cn/cas-auth-server/logout" method="get" target="target1">
+    <input type="hidden" name="service" value="http%3A%2F%2Fqianfan.analysys.cn%2Frefine%2Fqianfan%2Fuser%2Flogout">
+    <button type="submit">logout</button>
 </form>
+<iframe name="target1" style="display: none"  src="http://qianfan.analysys.cn"></iframe>
 </body>
 </html>
+
+u->w  ns
+rt sso with w url
+login to sso create s  rt w with s
+w server get s save to cookie
+
+w    session
+sso  session
+
+u->t ns
+rt sso
+rt to sso with sso session and  t url
+session pass redirect to t with session
+t server get s save to cookie
