@@ -123,3 +123,56 @@ key = Math.exp(g,AB) mod p
 
 >隐藏服务器信息
 
+## 跨域安全问题
+### 同源策略
+ - windows
+ - frames
+ - embedded objects
+ - cookies
+ - XmlHttpRequest
+
+## csrf(cross site request forgery)
+1. login to project2.domain.tld
+2. visit bad guy's site
+3. bad guy's site contains a link to http://project2.domain.tld/buy.php?symbol=INFX.PK
+4. you buy some thing
+
+### src csrf攻击
+img,script,iframe伪造get请求
+
+ - 做一个确认页面提高门槛
+ - post提高门槛
+ - http referer(不是所有浏览器都发送referer)
+ - 附加session token给url,服务器检查表单的token
+ - session快速失效提高门槛
+ - 验证码提高门槛
+ - csrf限定域名
+ - 纯json通信(表单难以伪造)
+ - 保持get幂等
+ - 不使用get post
+
+### xss
+htmlspecialchars
+忘记转义
+当用户的输入被送回
+UGC网站容易出现此问题 如微博
+
+## https简易通信
+假设使用AES和RSA
+服务器生成一对公钥和私钥
+将公钥及网站信息提交到CA
+CA使用CA私钥加密服务器公钥及网站信息生成证书
+服务器部署私钥及证书
+
+客户端生成随机数1请求服务器
+服务器生成随机数2  返回证书
+客户端使用CA公钥解密证书得到服务器公钥和服务器信息
+客户端验证服务器公钥是否有效
+验证通过
+客户端生成随机数3(pre master key)
+客户端根据3个随机数生成AES公钥
+并使用公钥加密随机数3发送给服务器
+服务器使用私钥得到随机数3
+服务器根据3个随机数生成AES公钥
+
+之后通信基于AES加密进行
