@@ -5,12 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-<img src="http://auth2.analysys.cn/cas-auth-server/logout?service=http%3A%2F%2Fqianfan.analysys.cn%2Frefine%2Fqianfan%2Fuser%2Flogout" style="display: none">
-<form action="http://auth2.analysys.cn/cas-auth-server/logout" method="get" target="target1">
+<!--<img src="http://auth2.analysys.cn/cas-auth-server/logout?service=http%3A%2F%2Fqianfan.analysys.cn%2Frefine%2Fqianfan%2Fuser%2Flogout" style="display: none">-->
+<form action="http://auth2.analysys.cn/cas-auth-server/logout" method="get" target="target1" id="logout">
     <input type="hidden" name="service" value="http%3A%2F%2Fqianfan.analysys.cn%2Frefine%2Fqianfan%2Fuser%2Flogout">
     <button type="submit">logout</button>
 </form>
 <iframe name="target1" style="display: none"  src="http://qianfan.analysys.cn"></iframe>
+<script>
+    document.querySelector('#logout').submit()
+</script>
 </body>
 </html>
 

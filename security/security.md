@@ -139,7 +139,9 @@ key = Math.exp(g,AB) mod p
 4. you buy some thing
 
 ### src csrf攻击
-img,script,iframe伪造get请求
+1. img,script,iframe伪造get请求
+2. cors ajax伪造请求
+3. form submit target iframe 伪造 post请求
 
  - 做一个确认页面提高门槛
  - post提高门槛
@@ -147,10 +149,37 @@ img,script,iframe伪造get请求
  - 附加session token给url,服务器检查表单的token
  - session快速失效提高门槛
  - 验证码提高门槛
- - csrf限定域名
+ - cors限定域名
  - 纯json通信(表单难以伪造)
  - 保持get幂等
  - 不使用get post
+ - X-Frame-Options:禁止iframe
+
+#### crfs token
+session中保存一份token或token的hash
+表单或ajax提交时带上token
+服务器比对两个token即可
+
+缺点:
+    - 打开新页面可能更新session中的token导致之前打开的页面提交后token不一致
+    - 如果被xss且使用表单get提交，token将写入url中,攻击者服务器能从referrer中取出url窃取token
+        - 插入外链时写入 rel=noreferer
+        - meta referrer设为never或origin隐藏token
+laravel:
+```php
+<form method="POST" action="/profile">
+    {{ csrf_field() }}
+    ...
+</form>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+```
+
 
 ### xss
 htmlspecialchars
