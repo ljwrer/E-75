@@ -160,9 +160,28 @@ UGC网站容易出现此问题 如微博
 ## https简易通信
 假设使用AES和RSA
 服务器生成一对公钥和私钥
+```
+＃生成私钥key文件
+openssl genrsa 1024 > /path/to/private.pem
+//
+＃通过私钥文件生成CSR证书签名,包含公钥及一些必要信息
+openssl req -new -key /path/to/private.pem -out csr.pem
+```
+
 将公钥及网站信息提交到CA
 CA使用CA私钥加密服务器公钥及网站信息生成证书
+```
+openssl x509 -req -days 365 -in csr.pem -signkey /path/to/private.pem -out /path/to/file.crt
+```
 服务器部署私钥及证书
+```
+var privateKey  = fs.readFileSync('/path/to/private.pem', 'utf8');
+var certificate = fs.readFileSync('/path/to/file.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+```
 
 客户端生成随机数1请求服务器
 服务器生成随机数2  返回证书
