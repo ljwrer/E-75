@@ -51,6 +51,7 @@ tcp端口号也是明文
 
 NAT源端口可能可以进行加密
  - 不同用户的NAT源端口不一致
+    - NAT也会使用session标记用户,所以公网ip+NAT session能唯一标记用户
  - TCP层加密
 
 #### fireSheep/Idiocy
