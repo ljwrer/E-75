@@ -119,7 +119,7 @@ TA,TB是完全公开的
 Alice计算Math.exp(TB,A) mod p 得到key
 Bob计算Math.exp(TA,B) mod p 得到key
 key = Math.exp(g,AB) mod p
-以s作为私钥进行AES,DES等对称加密
+以key作为私钥进行AES,DES等对称加密
 
 
 >隐藏服务器信息
